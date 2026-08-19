@@ -1,18 +1,26 @@
+import sys
+import os
 from tkinter import *
 from tkinter import ttk
 from tkinter import filedialog
-
-from pydub import AudioSegment
-
-import os
 
 def resource_path(relative_path):
     try:
         base_path = sys._MEIPASS
     except Exception:
-        base_path = os.path.abspath(".")
+        base_path = os.path.dirname(os.path.abspath(__file__))
 
     return os.path.join(base_path, relative_path)
+
+ffmpeg_path = resource_path("ffmpeg/ffmpeg.exe")
+ffprobe_path = resource_path("ffmpeg/ffprobe.exe")
+os.environ["PATH"] = os.path.dirname(ffmpeg_path) + os.pathsep + os.environ.get("PATH", "")
+
+from pydub import AudioSegment
+
+AudioSegment.converter = ffmpeg_path
+AudioSegment.ffmpeg = ffmpeg_path
+AudioSegment.ffprobe = ffprobe_path
 
 file = ""
 beg = 0
